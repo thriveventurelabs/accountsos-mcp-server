@@ -1,0 +1,46 @@
+{
+  "name": "@thriveventurelabs/accountsos-mcp",
+  "mcpName": "io.github.paulgosnell/accountsos-mcp",
+  "version": "0.2.3",
+  "description": "MCP server for AccountsOS: query your live accounting ledger from any MCP client",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "accountsos-mcp": "./dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "claude",
+    "accounting",
+    "bookkeeping",
+    "ai",
+    "llm",
+    "anthropic",
+    "vat",
+    "hmrc"
+  ],
+  "author": "Thrive Venture Labs",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thriveventurelabs/accountsos-mcp-server.git"
+  },
+  "homepage": "https://accounts-os.com",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0"
+  }
+}

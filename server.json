@@ -1,0 +1,36 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.paulgosnell/accountsos-mcp",
+  "description": "AI accountant. Query your company's books (balances, VAT, deadlines, invoices) from any MCP client. AccountsOS runs jurisdiction playbooks for 26 countries.",
+  "repository": {
+    "url": "https://github.com/thriveventurelabs/accountsos-mcp-server",
+    "source": "github"
+  },
+  "version": "0.2.3",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@thriveventurelabs/accountsos-mcp",
+      "version": "0.2.3",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "description": "Your AccountsOS API key (from https://accounts-os.com/settings)",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true,
+          "name": "ACCOUNTSOS_API_KEY"
+        },
+        {
+          "description": "Override API base URL (default https://accounts-os.com)",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "ACCOUNTSOS_BASE_URL"
+        }
+      ]
+    }
+  ]
+}
