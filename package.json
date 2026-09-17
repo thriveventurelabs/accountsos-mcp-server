@@ -1,8 +1,8 @@
 {
   "name": "@thriveventurelabs/accountsos-mcp",
   "mcpName": "io.github.paulgosnell/accountsos-mcp",
-  "version": "0.2.3",
-  "description": "MCP server for AccountsOS: query your live accounting ledger from any MCP client",
+  "version": "0.3.1",
+  "description": "MCP server for AccountsOS - Chat with your books from Claude Desktop",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -26,8 +26,7 @@
     "ai",
     "llm",
     "anthropic",
-    "vat",
-    "hmrc"
+    "uk-accounting"
   ],
   "author": "Thrive Venture Labs",
   "license": "MIT",

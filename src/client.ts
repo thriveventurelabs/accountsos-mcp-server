@@ -146,16 +146,33 @@ export class AccountsOS {
   async listTools(): Promise<
     Array<{ name: string; description: string; inputSchema: Record<string, unknown> }>
   > {
-    const response = await fetch(`${this.baseUrl}/api/mcp`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
-    });
-    if (!response.ok) {
-      throw new AccountsOSError("tools_list_failed", `tools/list failed (${response.status})`, response.status);
+    // Retry once. A single transient failure here is expensive out of all
+    // proportion to its cause: the caller falls back to a small built-in list,
+    // so the user silently gets a fraction of the tools with no error anywhere.
+    let lastError: unknown;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      try {
+        const response = await fetch(`${this.baseUrl}/api/mcp`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "tools/list" }),
+          signal: AbortSignal.timeout(10_000),
+        });
+        if (!response.ok) {
+          throw new AccountsOSError(
+            "tools_list_failed",
+            `tools/list failed (${response.status})`,
+            response.status
+          );
+        }
+        const data = await response.json();
+        return data?.result?.tools ?? [];
+      } catch (error) {
+        lastError = error;
+        if (attempt === 0) await new Promise((resolve) => setTimeout(resolve, 500));
+      }
     }
-    const data = await response.json();
-    return data?.result?.tools ?? [];
+    throw lastError;
   }
 
   // ============================================

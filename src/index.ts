@@ -26,7 +26,18 @@ import {
   ListResourcesRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { AccountsOS, AccountsOSError } from "./client.js";
+
+// Read the version from package.json rather than repeating it here. A literal
+// drifted twice: the published 0.2.3 tarball reported 0.1.0 because dist was
+// built before an earlier bump, which made a stale publish invisible.
+const PACKAGE_VERSION = (
+  JSON.parse(
+    readFileSync(join(__dirname, "..", "package.json"), "utf8")
+  ) as { version: string }
+).version;
 
 // Get API key from environment
 const apiKey = process.env.ACCOUNTSOS_API_KEY;
@@ -46,7 +57,7 @@ const client = new AccountsOS({
 const server = new Server(
   {
     name: "accountsos",
-    version: "0.2.3",
+    version: PACKAGE_VERSION,
   },
   {
     capabilities: {
@@ -69,11 +80,21 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
     if (Array.isArray(tools) && tools.length > 0) {
       return { tools };
     }
-  } catch {
-    // unreachable backend — use the built-in fallback list below
+  } catch (error) {
+    // Say so. Falling back quietly is how a user ends up with a fraction of the
+    // tools and no way to tell: the server still answers, it just answers small.
+    const reason = error instanceof Error ? error.message : String(error);
+    console.error(
+      `[accountsos] Could not reach ${process.env.ACCOUNTSOS_BASE_URL ?? "https://accounts-os.com"}/api/mcp to load the live tool catalogue (${reason}). ` +
+        `Serving the built-in fallback of ${FALLBACK_TOOL_COUNT} tools instead of the full set. Restart once the API is reachable.`
+    );
   }
-  return {
-    tools: [
+  return { tools: FALLBACK_TOOLS };
+});
+
+// Used only when the live catalogue above is unreachable. Deliberately a named
+// const so the warning can say how many tools the user is actually getting.
+const FALLBACK_TOOLS = [
       // Read Tools
       {
         name: "get_transactions",
@@ -365,9 +386,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => {
       { name: "update_opportunity_stage", description: "Move an opportunity to a different stage.", inputSchema: { type: "object", properties: { opportunity_id: { type: "string" }, stage_id: { type: "string" }, next_action: { type: "string" }, next_action_at: { type: "string" } }, required: ["opportunity_id", "stage_id"] } },
       { name: "update_project", description: "Rename a project/deal, or change its notes, contact, or status.", inputSchema: { type: "object", properties: { project_id: { type: "string" }, project_name: { type: "string" }, name: { type: "string" }, notes: { type: "string" }, status: { type: "string" }, contact_id: { type: "string" } } } },
       { name: "delete_project", description: "Delete an empty project/deal. Refuses if records are still linked.", inputSchema: { type: "object", properties: { project_id: { type: "string" }, project_name: { type: "string" } } } },
-    ],
-  };
-});
+];
+const FALLBACK_TOOL_COUNT = FALLBACK_TOOLS.length;
 
 // ============================================
 // Tool Handlers
