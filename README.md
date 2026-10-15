@@ -127,6 +127,10 @@ If npx has caching issues, use global install instead:
 npm install -g @thriveventurelabs/accountsos-mcp
 ```
 
+## Disclaimer
+
+This software provides general guidance about UK tax and accounting rules. It is not a substitute for professional advice from a qualified accountant or tax adviser. Always verify with HMRC source documents and consult a professional for advice specific to your circumstances.
+
 ## License
 
 MIT
