@@ -1,0 +1,19 @@
+{
+  "name": "accountsos",
+  "version": "0.3.1",
+  "description": "Query your live AccountsOS books from Gemini CLI: balances, transactions, VAT, deadlines, invoices and documents.",
+  "mcpServers": {
+    "accountsos": {
+      "command": "npx",
+      "args": ["-y", "@thriveventurelabs/accountsos-mcp@0.3.1"]
+    }
+  },
+  "settings": [
+    {
+      "name": "AccountsOS API key",
+      "description": "Create one at https://accounts-os.com/settings (API keys).",
+      "envVar": "ACCOUNTSOS_API_KEY",
+      "sensitive": true
+    }
+  ]
+}

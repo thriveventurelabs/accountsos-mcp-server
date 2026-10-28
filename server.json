@@ -1,12 +1,20 @@
 {
   "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
   "name": "io.github.paulgosnell/accountsos-mcp",
+  "title": "AccountsOS",
   "description": "Query your live AccountsOS books: balances, transactions, VAT, deadlines, invoices.",
+  "websiteUrl": "https://accounts-os.com",
   "repository": {
     "url": "https://github.com/thriveventurelabs/accountsos-mcp-server",
     "source": "github"
   },
-  "version": "0.3.1",
+  "version": "0.3.2",
+  "icons": [
+    {
+      "src": "https://raw.githubusercontent.com/thriveventurelabs/accountsos-agent-plugin/main/assets/logo.png",
+      "mimeType": "image/png"
+    }
+  ],
   "packages": [
     {
       "registryType": "npm",
@@ -31,6 +39,12 @@
           "name": "ACCOUNTSOS_BASE_URL"
         }
       ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://accounts-os.com/api/mcp/plugin"
     }
   ]
 }
